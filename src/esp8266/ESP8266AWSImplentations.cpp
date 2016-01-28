@@ -14,32 +14,29 @@ Esp8266HttpClient::Esp8266HttpClient() {
 
 char* Esp8266HttpClient::send(const char* request, const char* serverUrl, int port) {
 
-    WiFiClientSecure sclient;
-    Serial.println(serverUrl);
-    Serial.println(port);
-    Serial.println(request);
-    Serial.println("");
-    Serial.println("");
-
-    //
     String response = "";
+
     if (sclient.connect(serverUrl, port)) {
 
         // Send the request
-        sclient.print(request);
+        sclient.println(request);
+        sclient.println();
+        delay(delayTime);
 
-        // keep reading the response until it's finished
-        while(sclient.connected()) {
-          while(sclient.available()){
-            char c = sclient.read();
-            response.concat(c);
-            Serial.print('.');
+        while(sclient.connected()){
+          // Read the headers
+          String line = sclient.readStringUntil('\n');
+          if (line == "\r") {
+            break;
           }
-
-          // disconnect any open connections
-          sclient.stop();
         }
+        // Read the body
+        response = sclient.readStringUntil('\n');
+        //Serial.println("reply was:");
+        //Serial.println("==========");
+        //Serial.println(response);
 
+        sclient.stop();
     } else {
         // connection was unsuccessful
         sclient.stop();
@@ -49,6 +46,7 @@ char* Esp8266HttpClient::send(const char* request, const char* serverUrl, int po
     // convert the string into a char and return
     int len = response.length();
     char* response_char = new char[len + 1]();
+    Serial.println(response_char);
     response.toCharArray(response_char, len + 1);
     return response_char;
 }
