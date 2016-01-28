@@ -17,6 +17,8 @@ public:
     AmazonIOTClient();
 
     char* update_shadow(MinimalString shadow, ActionError& actionError);
+    char* get_shadow(ActionError& actionError);
+
 };
 
 #endif /* AMAZONIOTCLIENT_H_ */

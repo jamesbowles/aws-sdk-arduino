@@ -21,3 +21,14 @@ char* AmazonIOTClient::update_shadow(MinimalString shadow, ActionError& actionEr
     char* response = sendData(request);
     return response;
 }
+
+char* AmazonIOTClient::get_shadow(ActionError& actionError) {
+  //    do something with this
+//    actionError = NONE_ACTIONERROR;
+
+    this->method = "GET";
+    MinimalString uri = "";
+    char* request = createRequest(uri);
+    char* response = sendData(request);
+    return response;
+}
